@@ -4,5 +4,6 @@ env.py
 __pycache__
 *.csv
 *.xlsx
+*.geojson
 ## Just the files/folders that we are ignoring
 

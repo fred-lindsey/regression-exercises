@@ -64,6 +64,17 @@ def remove_outliers(threshold, quant_cols, df):
     print(df.shape)
     print(df_without_outliers.shape)
     return df_without_outliers
+
+#__________________________________________________________________________________
+def map_counties(df):
+    # identified counties for fips codes 
+    counties = {6037: 'los_angeles',
+                6059: 'orange_county',
+                6111: 'ventura'}
+    # map counties to fips codes
+    df.fips = df.fips.map(counties)
+    return df
+# make sure 'fips' is object type 
 #__________________________________________________________________________________
 
 def prep_zillow(df):
@@ -80,7 +91,7 @@ def prep_zillow(df):
     # drop any duplicate rows
     df = df.drop_duplicates(keep='first')
     # convert column types from float to int
-    df = df.astype({'fips': int, 'parcelid': object})
+    df = df.astype({'fips': object, 'parcelid': object})
     # remove homes with 0 BR/BD or SQ FT from the final df
     df = df[(df.bedroomcnt != 0) & (df.bathroomcnt != 0) & 
     (df.calculatedfinishedsquarefeet >= 69)]
@@ -90,6 +101,7 @@ def prep_zillow(df):
     # outlier handling
     # remove numeric values with > 3.5 std dev
     df = remove_outliers(3.5, quants, df)
+    df = map_counties(df)
 
     return df
 #__________________________________________________________________________________
